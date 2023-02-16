@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './style.css';
 
 const App = () => {
   // todoのstate
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      return JSON.parse(savedTodos);
+    } else {
+      return [];
+    }
+  });
 
   // 入力された内容のstate
   const [addTodo, setAddTodo] = useState("");
 
   // 進行状況のstate
   const [todoStatus, setTodoStatus] = useState(true)
+
+  // todosが更新されるたびにJSON形式に変換してローカルストレージに保存
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos])
 
   // 入力された値を取得してAddTodoを更新
   const addTodoList = (e) => {
